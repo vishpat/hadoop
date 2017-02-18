@@ -6,6 +6,10 @@ from mrjob.job import MRStep
 
 class MostPopularMovie(MRJob):
 
+    def configure_options(self):
+        super(MostPopularMovie, self).configure_options()
+        self.add_file_option('--names')
+
     def steps(self):
 
         steps = [
@@ -24,7 +28,20 @@ class MostPopularMovie(MRJob):
         yield None, (sum(watch_cnt), movie)
 
     def reducer_most_watched_movie(self, m, movie_watch_cnt_list):
-        yield max(movie_watch_cnt_list)
+        view_cnt, movie_id = max(movie_watch_cnt_list)
+        movie = None
+        with open(self.options.names) as f:
+            for line in f:
+                movie_details = line
+                if '|' in line:
+                    parts = line.split('|')
+                    movie_details = parts[0]
+                parts = movie_details.split(',')
+
+                if parts[0] == movie_id:
+                    movie = parts[1]
+                    break
+        yield movie, view_cnt
 
 
 if __name__ == "__main__":

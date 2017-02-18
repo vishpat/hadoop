@@ -28,7 +28,7 @@ class MRCustomerSpending(MRJob):
 
     def reducer_total_spending(self, total_spending, customers):
         for customer in customers:
-            yield total_spending, customer
+            yield customer, total_spending
 
 
 if __name__ == "__main__":
