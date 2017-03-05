@@ -1,1 +1,17 @@
 apply plugin: 'java'
+
+def hadoopVersion = "2.7.2"
+repositories {
+    mavenCentral()
+}
+
+jar {
+    manifest {
+         attributes 'Main-Class': 'com.akruty.bigdata.hadoop.mapreduce.Recommender'
+    }
+}
+
+dependencies {
+  compile "org.apache.hadoop:hadoop-client:$hadoopVersion"
+  compile "org.apache.hadoop:hadoop-common:$hadoopVersion"
+}
