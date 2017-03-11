@@ -14,9 +14,9 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-public class Recommender {
+public class WordCount {
 
-    public static class RecommenderMapper extends Mapper<Object, Text, Text, IntWritable> {
+    public static class WordCountMapper extends Mapper<Object, Text, Text, IntWritable> {
         private static final IntWritable one = new IntWritable(1);
         private Text word = new Text();
 
@@ -29,7 +29,7 @@ public class Recommender {
         }
     }
 
-    public static class RecommenderReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         public void reduce(Text key, Iterable<IntWritable> values, Context ctx) throws IOException, InterruptedException {
             int sum = 0;
             while (values.iterator().hasNext()) {
@@ -51,10 +51,10 @@ public class Recommender {
         }
 
         Job job = Job.getInstance(conf, "Word count");
-        job.setJarByClass(Recommender.class);
-        job.setMapperClass(RecommenderMapper.class);
-        job.setCombinerClass(RecommenderReducer.class);
-        job.setReducerClass(RecommenderReducer.class);
+        job.setJarByClass(WordCount.class);
+        job.setMapperClass(WordCountMapper.class);
+        job.setCombinerClass(WordCountReducer.class);
+        job.setReducerClass(WordCountReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
